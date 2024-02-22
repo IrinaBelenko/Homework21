@@ -42,7 +42,4 @@ class DetailsFragment : Fragment() {
         imageH = imageURL
     }
 
-    fun show() {
-        detailsTitle?.text = description
-    }
 }
