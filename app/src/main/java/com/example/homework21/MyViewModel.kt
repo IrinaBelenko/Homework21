@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.reactivex.Single
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -15,24 +17,18 @@ class MyViewModel : ViewModel() {
     fun getData() {
         _uiState.value = UIState.Processing
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val response = repo.getHeroes2()
-                if (response != null) {
-                    withContext(Dispatchers.Main) {
-//                        _uiState.postValue(
-//                            UIState.Result(response.images.lg, response?.name)
-//                        )
-                    }
-                } else
-                    _uiState.postValue(UIState.Error("Error"))
-            }
+         var result = ""
+         val heroes = async { repo.getHeroes2() } .await()
+        withContext(Dispatchers.Main){
+            _uiState.postValue(UIState.Result("Test"))
+        }
         }
     }
 
     sealed class UIState {
         object Empty : UIState()
         object Processing : UIState()
-        class Result(val imageURL: String, val nameHero: String, val listValue: String) : UIState()
+        class Result(val responseHeroes: String) : UIState()
         class Error(val description: String) : UIState()
     }
 

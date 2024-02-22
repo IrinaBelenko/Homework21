@@ -32,12 +32,12 @@ class ListFragment : Fragment() {
         var text:String
 
         viewModel.getData()
-        viewModel.uiState.observe(this){
+        viewModel.uiState.observe(viewLifecycleOwner){
             when (it) {
                 is MyViewModel.UIState.Empty -> Unit
                 is MyViewModel.UIState.Result -> {
                     val detailsFragment = DetailsFragment()
-                    detailsFragment.setDescription(it.imageURL, it.nameHero, it.listValue)
+                   // detailsFragment.setDescription(it.imageURL, it.nameHero, it.listValue)
                 }
 
                 is MyViewModel.UIState.Processing -> {
